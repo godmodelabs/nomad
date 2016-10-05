@@ -20,17 +20,17 @@ import (
 
 // MockTaskHooks is a mock of the TaskHooks interface useful for testing
 type MockTaskHooks struct {
-	Restarts  int
-	Signals   []os.Signal
-	Unblocked bool
-	KillError error
+	Restarts   int
+	Signals    []os.Signal
+	Unblocked  bool
+	KillReason string
 }
 
-func NewMockTaskHooks() *MockTaskHooks      { return &MockTaskHooks{} }
-func (m *MockTaskHooks) Restart()           { m.Restarts++ }
-func (m *MockTaskHooks) Signal(s os.Signal) { m.Signals = append(m.Signals, s) }
-func (m *MockTaskHooks) UnblockStart()      { m.Unblocked = true }
-func (m *MockTaskHooks) Kill(e error)       { m.KillError = e }
+func NewMockTaskHooks() *MockTaskHooks                             { return &MockTaskHooks{} }
+func (m *MockTaskHooks) Restart(source, reason string)             { m.Restarts++ }
+func (m *MockTaskHooks) Signal(source, reason string, s os.Signal) { m.Signals = append(m.Signals, s) }
+func (m *MockTaskHooks) UnblockStart(source string)                { m.Unblocked = true }
+func (m *MockTaskHooks) Kill(source, reason string)                { m.KillReason = reason }
 
 // testHarness is used to test the TaskTemplateManager by spinning up
 // Consul/Vault as needed
